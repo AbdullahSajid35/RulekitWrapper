@@ -1,142 +1,183 @@
-Titanic Survival Prediction with Neural Network and Rulekit
-This repository contains a Python script that demonstrates a machine learning pipeline for predicting survival on the Titanic dataset using a neural network and generating interpretable rules with a custom RulekitWrapper class.
-Project Overview
-The script performs the following tasks:
+# Rule-Based Model Generation and Interpretability
 
-Loads and preprocesses the Titanic dataset (Titanic-Dataset.csv).
-Trains a neural network using TensorFlow/Keras to predict survival.
-Uses the RulekitWrapper to generate interpretable rules from the neural network's predictions.
-Evaluates the neural network and rule-based model performance.
-Provides local explainability for a single test sample using the RulekitWrapper.
+This repository demonstrates a complete machine learning pipeline that
+integrates deep learning with interpretable rule-based models.\
+It combines a **Neural Network** for high-performance classification
+with **RuleKit** for generating human-understandable rules.
 
-Prerequisites
-To run the script, you need:
+------------------------------------------------------------------------
 
-Python 3.8 or higher
-Conda (Anaconda or Miniconda) installed
-The Titanic dataset (Titanic-Dataset.csv) in the Datasets folder
+## **Project Overview**
 
-Setup Instructions
-1. Clone the Repository
-Clone this repository to your local machine:
+This project focuses on combining **predictive modeling** with **model
+interpretability**:
+
+-   Preprocesses datasets and prepares features for training.
+-   Trains a **Neural Network** using TensorFlow/Keras for
+    classification.
+-   Uses a custom **RulekitWrapper** to extract interpretable rules from
+    predictions.
+-   Evaluates both neural network performance and rule-based model
+    fidelity.
+-   Provides **local explainability** for individual samples.
+
+------------------------------------------------------------------------
+
+## **Key Features**
+
+### **1. Neural Network Classifier**
+
+-   Multi-layer perceptron architecture.
+-   Uses **early stopping** to avoid overfitting.
+-   Produces high-accuracy predictions.
+
+### **2. RuleKit Integration**
+
+-   Uses a custom `RulekitWrapper` class.
+-   Extracts **human-readable rules** from neural network outputs.
+-   Generates rule statistics like coverage, support, and confidence.
+-   Provides **fidelity scores** to measure alignment between rules and
+    the neural model.
+
+### **3. Local Explainability**
+
+-   Explains **which rules** influence an individual prediction.
+-   Highlights interpretable decision-making paths.
+
+------------------------------------------------------------------------
+
+## **Installation**
+
+### **1. Clone the Repository**
+
+``` bash
 git clone <repository-url>
 cd <repository-name>
+```
 
-2. Create a Conda Virtual Environment
-Create a Conda environment named titanic_env with Python 3.8:
-conda create -n titanic_env python=3.8
+### **2. Create a Conda Environment**
 
-Activate the environment:
-conda activate titanic_env
+``` bash
+conda create -n rulekit_env python=3.8
+conda activate rulekit_env
+```
 
-3. Install Required Libraries
-Install the necessary Python packages using pip within the Conda environment:
-pip install numpy pandas scikit-learn tensorflow rulekit
+### **3. Install Dependencies**
 
-Note: The rulekit package is assumed to be the library used by RulekitWrapper. If it has a different name or is a custom package, replace rulekit with the correct package name or installation instructions.
-4. Dataset
-Ensure the Titanic-Dataset.csv file is placed in the Datasets directory within the repository. The script expects the dataset to contain columns: Pclass, Survived, Sex, Age, SibSp, Parch, and Fare.
-Usage
-Run the main script to train the neural network, generate rules, and evaluate the model:
-python titanic_prediction.py
+``` bash
+pip install -r requirements.txt
+```
 
-The script will:
+------------------------------------------------------------------------
 
-Preprocess the dataset (handle missing values, encode categorical variables, scale features).
-Train a neural network with early stopping.
-Generate interpretable rules using RulekitWrapper.
-Output performance metrics (accuracy, balanced accuracy) for both the neural network and rule-based model.
-Provide local explainability for a single test sample.
+## **Usage**
 
-Hyperparameters in RulekitWrapper
-The RulekitWrapper class is initialized with two key hyperparameters:
+### **Run the Main Script**
 
-max_growing (default: 2)
+``` bash
+python main.py
+```
 
-Description: Controls the maximum number of conditions (or splits) that can be added to a rule during the rule induction process. A lower value limits the complexity of individual rules, making them simpler and more interpretable but potentially less precise.
-Impact: Setting max_growing=2 ensures that each rule has at most two conditions, balancing interpretability and predictive power.
+### **Pipeline Steps**
 
+-   Loads and preprocesses data.
+-   Trains a neural network classifier.
+-   Extracts interpretable rules using `RulekitWrapper`.
+-   Displays:
+    -   Neural network performance.
+    -   Rule-based statistics.
+    -   Fidelity score.
+    -   Local explanations.
 
-max_rule_count (default: 3)
+------------------------------------------------------------------------
 
-Description: Limits the total number of rules generated by the RulekitWrapper. A smaller number of rules improves interpretability but may reduce the model's ability to capture complex patterns.
-Impact: Setting max_rule_count=3 restricts the model to generate up to three rules, prioritizing simplicity over exhaustive coverage.
+## **RuleKitWrapper Overview**
 
+The `RulekitWrapper` class provides a unified interface for training,
+extracting, and explaining rules.
 
+### **Initialization**
 
-Main Functions of RulekitWrapper
-The RulekitWrapper class provides the following key methods:
+``` python
+RulekitWrapper(max_growing=2, max_rule_count=3)
+```
 
-fit(X_train, y_train)
+  -----------------------------------------------------------------------
+  Parameter                                  Description
+  ------------------------------------------ ----------------------------
+  `max_growing`                              Maximum number of conditions
+                                             per rule (default `2`).
 
-Description: Trains the rule-based model on the provided training data (X_train) and target labels (y_train).
-Input:
-X_train: Training features (pandas DataFrame or NumPy array).
-y_train: Training labels (pandas Series or NumPy array).
+  `max_rule_count`                           Maximum number of rules to
+                                             generate (default `3`).
+  -----------------------------------------------------------------------
 
+------------------------------------------------------------------------
 
-Output: Fits the internal rule induction model and prepares it for rule extraction or prediction.
+### **Core Methods**
 
+  -----------------------------------------------------------------------
+  Method                                       Description
+  -------------------------------------------- --------------------------
+  `fit(X, y)`                                  Trains the rule-based
+                                               model on data.
 
-get_rules()
+  `get_rules()`                                Returns generated rules
+                                               and their weights.
 
-Description: Retrieves the list of generated rules along with their weights.
-Output: A list of tuples, where each tuple contains a rule (as a string or object) and its associated weight (indicating importance or confidence).
+  `rules_statistics()`                         Computes rule statistics
+                                               (coverage, support, etc.).
 
+  `predict(X, rules)`                          Predicts labels using
+                                               generated rules.
 
-rules_statistics(X_train, y_train)
+  `local_explainability(sample)`               Explains predictions for a
+                                               single sample.
+  -----------------------------------------------------------------------
 
-Description: Computes statistics for the generated rules, such as coverage, support, or confidence, based on the training data.
-Input:
-X_train: Training features.
-y_train: Training labels.
+------------------------------------------------------------------------
 
+## **Expected Outputs**
 
-Output: A summary of rule statistics, typically as a dictionary or DataFrame.
+-   **Neural Network Performance**
+    -   Training accuracy and balanced accuracy.
+    -   Test accuracy and balanced accuracy.
+-   **Rule-Based Model Insights**
+    -   Number of rules generated.
+    -   Rule weights and importance.
+    -   Rule coverage and support.
+    -   Fidelity score.
+-   **Local Explainability**
+    -   Human-readable explanations for individual samples.
 
+------------------------------------------------------------------------
 
-predict(X_test, rules_list)
+## **Folder Structure**
 
-Description: Makes predictions on the test data (X_test) using the provided list of rules.
-Input:
-X_test: Test features (pandas DataFrame or NumPy array).
-rules_list: List of rules obtained from get_rules().
+    project/
+    │── Datasets/              # Place your dataset(s) here
+    │── RulekitWrapper.py      # Custom wrapper for RuleKit
+    │── main.py                # Main pipeline script
+    │── requirements.txt       # Project dependencies
+    │── README.md              # Project documentation
 
+------------------------------------------------------------------------
 
-Output: Predicted labels for the test data.
+## **Dependencies**
 
+-   Python ≥ 3.8
+-   NumPy
+-   Pandas
+-   Scikit-learn
+-   TensorFlow / Keras
+-   RuleKit
+-   Matplotlib (optional, for visualizations)
 
-local_explainability(sample)
+------------------------------------------------------------------------
 
-Description: Provides an explanation for a single test sample by identifying which rules apply and how they contribute to the prediction.
-Input:
-sample: A single test sample (pandas Series or NumPy array).
+## **License**
 
+This project is open-source and available under the MIT License.
 
-Output: A detailed explanation, typically as a string or structured format, describing the rules and weights applied to the sample.
+------------------------------------------------------------------------
 
-
-
-Expected Output
-When you run the script, it will output:
-
-Neural network performance:
-Training accuracy and balanced accuracy.
-Test accuracy and balanced accuracy.
-
-
-Rule-based model results:
-Total number of rules generated.
-Details of each rule and its weight.
-Rule statistics (e.g., coverage, support).
-Fidelity score (accuracy of rule-based predictions compared to neural network predictions).
-Classifier and rule-based model accuracies, along with the drop in accuracy.
-
-
-Local explainability for a single test sample.
-
-Notes
-
-The script assumes the RulekitWrapper class is available in the repository or installed as a dependency. If it is a custom implementation, ensure it is included in the repository.
-The neural network uses a simple architecture with three hidden layers (128, 64, and 32 neurons) and early stopping to prevent overfitting.
-The dataset preprocessing includes handling missing values (using median imputation for Age and Fare), encoding categorical variables (Pclass, Sex), and scaling features using MinMaxScaler.
