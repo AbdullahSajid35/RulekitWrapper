@@ -51,14 +51,14 @@ interpretability**:
 ### **1. Clone the Repository**
 
 ``` bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/AbdullahSajid35/RulekitWrapper
+cd RulekitWrapper
 ```
 
 ### **2. Create a Conda Environment**
 
 ``` bash
-conda create -n rulekit_env python=3.8
+conda create -n rulekit_env
 conda activate rulekit_env
 ```
 
@@ -101,39 +101,6 @@ extracting, and explaining rules.
 ``` python
 RulekitWrapper(max_growing=2, max_rule_count=3)
 ```
-
-  -----------------------------------------------------------------------
-  Parameter                                  Description
-  ------------------------------------------ ----------------------------
-  `max_growing`                              Maximum number of conditions
-                                             per rule (default `2`).
-
-  `max_rule_count`                           Maximum number of rules to
-                                             generate (default `3`).
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-### **Core Methods**
-
-  -----------------------------------------------------------------------
-  Method                                       Description
-  -------------------------------------------- --------------------------
-  `fit(X, y)`                                  Trains the rule-based
-                                               model on data.
-
-  `get_rules()`                                Returns generated rules
-                                               and their weights.
-
-  `rules_statistics()`                         Computes rule statistics
-                                               (coverage, support, etc.).
-
-  `predict(X, rules)`                          Predicts labels using
-                                               generated rules.
-
-  `local_explainability(sample)`               Explains predictions for a
-                                               single sample.
-  -----------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
